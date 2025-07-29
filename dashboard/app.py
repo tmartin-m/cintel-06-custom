@@ -10,10 +10,9 @@ from shinywidgets import render_plotly
 
 # Utility libraries
 import pandas as pd
+import seaborn as sns
 import plotly.express as px
 import matplotlib.pyplot as plt
-
-iris = sns.load_dataset("iris")
 
 # --------------------------------------------
 # Reactive Aspects
