@@ -2,7 +2,8 @@
 # Imports
 # --------------------------------------------
 # Core shiny components
-from shiny import App, ui, reactive, render
+from shiny.express import ui, input, render
+from shiny import reactive
 
 # Extended plotting support
 from shinywidgets import render_plotly
@@ -10,14 +11,16 @@ from shinywidgets import render_plotly
 # Utility libraries
 import pandas as pd
 import plotly.express as px
-from datetime import datetime
+import matplotlib.pyplot as plt
+
+iris = sns.load_dataset("iris")
 
 # --------------------------------------------
 # Reactive Aspects
 # --------------------------------------------
 
-# Load data (you can replace with live data or API later)
-data = pd.read_csv("data/dataset.csv", parse_dates=["date"])
+# Load data 
+iris = sns.load_dataset("iris")
 
 # Define a reactive calculation to filter data based on UI input
 @reactive.calc
