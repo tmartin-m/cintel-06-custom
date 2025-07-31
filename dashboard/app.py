@@ -62,7 +62,7 @@ app_ui = ui.page_fluid(
         ui.card(
             ui.card_header("Average Measurements by Species"),
             ui.output_data_frame("iris_summary_table"),
-            style="max-width: 400px; font-size: 0.85rem; padding: 10px; margin: auto;"
+            style="max-height: 200px; font-size: 0.85rem; padding: 10px; margin: auto;"
         ),
 
 
@@ -170,11 +170,6 @@ def server(input, output, session):
         )
         fig.update_layout(margin=dict(t=40, r=10, l=10, b=40))
         return fig
-
-# --------------------------------------------
-# App Launch
-# --------------------------------------------
-app = App(app_ui, server)
 
 # --------------------------------------------
 # App Launch
