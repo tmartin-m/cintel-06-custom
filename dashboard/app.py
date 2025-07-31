@@ -55,31 +55,18 @@ app_ui = ui.page_fluid(
 
         ui.layout_columns(
             ui.card(
-                ui.card_header("Iris Data Table"),
-                ui.output_data_frame("iris_data_table")
-            ),
-            ui.card(
                 ui.card_header("Iris Data Grid"),
                 ui.output_data_frame("iris_data_grid")
-            )
-        ),
-
-        ui.layout_columns(
-            ui.card(
-                ui.card_header("Plotly Histogram"),
-                output_widget("plotly_histogram")
             ),
-            ui.card(
+              ui.card(
                 ui.card_header("Seaborn Histogram"),
                 ui.output_plot("seaborn_hist")
             )
         ),
 
-        ui.layout_columns(
-            ui.card(
+        ui.card(
                 ui.card_header("Average Measurements by Species"),
                 ui.output_data_frame("iris_summary_table")
-            )
         ),
 
         ui.card(
@@ -169,6 +156,7 @@ def server(input, output, session):
     @output
     @render_widget
     def plotly_scatterplot():
+
         fig = px.scatter(
             filtered_data(),
             x="sepal_length",
@@ -184,11 +172,6 @@ def server(input, output, session):
         )
         fig.update_layout(margin=dict(t=40, r=10, l=10, b=40))
         return fig
-
-# --------------------------------------------
-# App Launch
-# --------------------------------------------
-app = App(app_ui, server)
 
 # --------------------------------------------
 # App Launch
