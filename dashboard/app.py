@@ -31,11 +31,6 @@ app_ui = ui.page_fluid(
                 "Choose an Attribute:",
                 ["sepal_length", "sepal_width", "petal_length", "petal_width", "species"]
             ),
-            ui.input_numeric(
-                "plotly_bin_count",
-                "Plotly Histogram Bins",
-                10
-            ),
             ui.input_slider(
                 "seaborn_bin_count",
                 "Seaborn Histogram Bins",
@@ -63,11 +58,14 @@ app_ui = ui.page_fluid(
                 ui.output_plot("seaborn_hist")
             )
         ),
-
+        
         ui.card(
-                ui.card_header("Average Measurements by Species"),
-                ui.output_data_frame("iris_summary_table")
+            ui.card_header("Average Measurements by Species"),
+            ui.output_data_frame("iris_summary_table"),
+            style="max-width: 400px; font-size: 0.85rem; padding: 10px; margin: auto;"
         ),
+
+
 
         ui.card(
             ui.card_header("Plotly Scatterplot: Sepal Length vs Sepal Width"),
@@ -172,6 +170,11 @@ def server(input, output, session):
         )
         fig.update_layout(margin=dict(t=40, r=10, l=10, b=40))
         return fig
+
+# --------------------------------------------
+# App Launch
+# --------------------------------------------
+app = App(app_ui, server)
 
 # --------------------------------------------
 # App Launch
