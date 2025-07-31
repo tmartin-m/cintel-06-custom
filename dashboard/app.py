@@ -20,6 +20,11 @@ sns.set_style("whitegrid")  # Enhance seaborn visuals
 app_ui = ui.page_fluid(
     ui.layout_sidebar(
         ui.sidebar(
+            ui.img(
+                src="https://images.pexels.com/photos/2471455/pexels-photo-2471455.jpeg",
+                height="150px",
+                style="margin-bottom: 10px;"
+            ),
             ui.h2("Iris Dashboard"),
             ui.input_selectize(
                 "selected_attribute",
@@ -70,16 +75,18 @@ app_ui = ui.page_fluid(
             )
         ),
 
+        ui.layout_columns(
+            ui.card(
+                ui.card_header("Average Measurements by Species"),
+                ui.output_data_frame("iris_summary_table")
+            )
+        ),
+
         ui.card(
             ui.card_header("Plotly Scatterplot: Sepal Length vs Sepal Width"),
             output_widget("plotly_scatterplot"),
             full_screen=True
         ),
-
-        ui.card(
-            ui.card_header("Summary Statistics"),
-            ui.output_text("summary_stats")
-        )
     )
 )
 
@@ -103,6 +110,24 @@ def server(input, output, session):
     @render.data_frame
     def iris_data_grid():
         return render.DataGrid(filtered_data(), filters=True)
+
+    @output
+    @render.data_frame
+    def iris_summary_table():
+        df = filtered_data()
+        summary = (
+            df.groupby("species")[["sepal_length", "sepal_width", "petal_length", "petal_width"]]
+            .mean()
+            .round(2)
+            .reset_index()
+            .rename(columns={
+                "sepal_length": "Avg Sepal Length",
+                "sepal_width": "Avg Sepal Width",
+                "petal_length": "Avg Petal Length",
+                "petal_width": "Avg Petal Width"
+            })
+        )
+        return render.DataTable(summary)
 
     @output
     @render_widget
@@ -159,6 +184,11 @@ def server(input, output, session):
         )
         fig.update_layout(margin=dict(t=40, r=10, l=10, b=40))
         return fig
+
+# --------------------------------------------
+# App Launch
+# --------------------------------------------
+app = App(app_ui, server)
 
 # --------------------------------------------
 # App Launch
