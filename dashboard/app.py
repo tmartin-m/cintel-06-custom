@@ -46,12 +46,6 @@ app_ui = ui.page_fluid(
                 inline=True
             ),
             ui.hr(),
-            ui.a(
-                icon_svg("github", margin_end="0.5em") + "View on GitHub",
-                href="https://github.com/your-repo",
-                target="_blank",
-                class_="btn btn-link"
-            )
         ),
 
         ui.layout_columns(
@@ -165,13 +159,6 @@ def server(input, output, session):
         )
         fig.update_layout(margin=dict(t=40, r=10, l=10, b=40))
         return fig
-
-    @output
-    @render.text
-    def summary_stats():
-        col = input.selected_attribute()
-        series = filtered_data()[col]
-        return f"Mean: {series.mean():.2f} | Std Dev: {series.std():.2f} | Min: {series.min():.2f} | Max: {series.max():.2f}"
 
 # --------------------------------------------
 # App Launch
