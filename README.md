@@ -8,6 +8,8 @@ https://github.com/mwaskom/seaborn-data/blob/master/iris.csv
 # Color Palette Ideas
 <img width="797" height="253" alt="image" src="https://github.com/user-attachments/assets/b1c6ee1a-b287-447d-b839-9a2707aeca5b" />
 
+# Visuals
+https://images.pexels.com/photos/2471455/pexels-photo-2471455.jpeg
 
 # Resources
 https://shiny.posit.co/py/components/outputs/plot-seaborn/
