@@ -59,10 +59,10 @@ app_ui = ui.page_fluid(
 
         ui.layout_columns(
             ui.card(
-                ui.card_header("Iris Data Grid"),
-                ui.output_data_frame("iris_data_grid"),
+                ui.card_header("Plotly Scatterplot"),
+                output_widget("plotly_scatterplot"),
                 style="background-color: #F8F8FF; padding: 10px; border-radius: 8px;"
-            ),
+        ),
             ui.card(
                 ui.card_header("Seaborn Histogram"),
                 ui.output_plot("seaborn_hist"),
@@ -83,13 +83,14 @@ app_ui = ui.page_fluid(
         ),
 
         ui.card(
-            ui.card_header("Plotly Scatterplot"),
-            output_widget("plotly_scatterplot"),
+            ui.card_header("Iris Data Grid"),
+            ui.output_data_frame("iris_data_grid"),
             full_screen=True,
             style="background-color: #F8F8FF; padding: 10px; border-radius: 8px;"
         ),
     )
 )
+
 
 # --------------------------------------------
 # Server
