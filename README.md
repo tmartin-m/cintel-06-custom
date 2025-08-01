@@ -13,3 +13,6 @@ https://shiny.posit.co/py/components/inputs/select-single/
 https://shiny.posit.co/py/components/inputs/selectize-single/
 https://shiny.posit.co/py/components/inputs/slider/
 https://shiny.posit.co/py/components/outputs/image/
+
+# Enhancement Ideas
+https://seaborn.pydata.org/generated/seaborn.heatmap.html
