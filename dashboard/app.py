@@ -29,7 +29,7 @@ app_ui = ui.page_fluid(
             ui.input_selectize(
                 "selected_attribute",
                 "Choose an Attribute:",
-                ["sepal_length", "sepal_width", "petal_length", "petal_width", "species"]
+                ["sepal_length", "sepal_width", "petal_length", "petal_width"]
             ),
             ui.input_slider(
                 "seaborn_bin_count",
@@ -46,6 +46,7 @@ app_ui = ui.page_fluid(
                 inline=True
             ),
             ui.hr(),
+            style="background-color: #E6E6FA; padding: 15px; border-radius: 8px; color: #333333;"
         ),
 
         ui.layout_columns(
@@ -126,9 +127,9 @@ def server(input, output, session):
             hover_data=["petal_length", "petal_width", "sepal_length", "sepal_width"],
             title=f"Histogram of {input.selected_attribute().replace('_', ' ').title()} by Species",
             color_discrete_map={
-                "setosa": "#1f77b4",
-                "versicolor": "#ff7f0e",
-                "virginica": "#2ca02c"
+                "setosa": "#E6E6FA",
+                "versicolor": "#77DD77",
+                "virginica": "#5D3FD3"
             }
         )
         fig.update_layout(margin=dict(t=40, r=10, l=10, b=40))
