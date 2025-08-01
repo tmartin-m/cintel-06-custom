@@ -60,11 +60,13 @@ app_ui = ui.page_fluid(
         ui.layout_columns(
             ui.card(
                 ui.card_header("Iris Data Grid"),
-                ui.output_data_frame("iris_data_grid")
+                ui.output_data_frame("iris_data_grid"),
+                style="background-color: #F8F8FF; padding: 10px; border-radius: 8px;"
             ),
             ui.card(
                 ui.card_header("Seaborn Histogram"),
-                ui.output_plot("seaborn_hist")
+                ui.output_plot("seaborn_hist"),
+                style="background-color: #F8F8FF; padding: 10px; border-radius: 8px;"
             )
         ),
 
@@ -76,13 +78,15 @@ app_ui = ui.page_fluid(
 
         ui.card(
             ui.card_header("Correlation Heatmap"),
-            ui.output_plot("correlation_heatmap")
+            ui.output_plot("correlation_heatmap"),
+            style="background-color: #F8F8FF; padding: 10px; border-radius: 8px;"
         ),
 
         ui.card(
             ui.card_header("Plotly Scatterplot"),
             output_widget("plotly_scatterplot"),
-            full_screen=True
+            full_screen=True,
+            style="background-color: #F8F8FF; padding: 10px; border-radius: 8px;"
         ),
     )
 )
@@ -212,11 +216,6 @@ def server(input, output, session):
 
         fig.update_layout(margin=dict(t=40, r=10, l=10, b=40))
         return fig
-
-# --------------------------------------------
-# App Launch
-# --------------------------------------------
-app = App(app_ui, server)
 
 # --------------------------------------------
 # App Launch
