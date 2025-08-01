@@ -2,17 +2,16 @@
 # Imports
 # --------------------------------------------
 from shiny import reactive, App, ui, render
-from shinywidgets import output_widget, render_widget, render_plotly
+from shinywidgets import output_widget, render_widget
 import seaborn as sns
 import plotly.express as px
 import matplotlib.pyplot as plt
-from faicons import icon_svg
 
 # --------------------------------------------
 # Load data
 # --------------------------------------------
 iris = sns.load_dataset("iris")
-sns.set_style("whitegrid")  # Enhance seaborn visuals
+sns.set_style("whitegrid")
 
 # --------------------------------------------
 # UI Layout
@@ -38,11 +37,20 @@ app_ui = ui.page_fluid(
                 100,
                 5
             ),
+            ui.input_select("x_axis", "X-Axis", ["sepal_length", "sepal_width", "petal_length", "petal_width"]),
+            ui.input_select("y_axis", "Y-Axis", ["sepal_length", "sepal_width", "petal_length", "petal_width"]),
             ui.input_checkbox_group(
                 "selected_species_list",
                 "Filter by Species",
                 ["Setosa", "Versicolor", "Virginica"],
                 selected=["Setosa", "Versicolor", "Virginica"],
+                inline=True
+            ),
+            ui.input_radio_buttons(
+                "plot_type",
+                "Choose Plot Type:",
+                choices=["Scatterplot", "Line Graph"],
+                selected="Scatterplot",
                 inline=True
             ),
             ui.hr(),
@@ -54,22 +62,25 @@ app_ui = ui.page_fluid(
                 ui.card_header("Iris Data Grid"),
                 ui.output_data_frame("iris_data_grid")
             ),
-              ui.card(
+            ui.card(
                 ui.card_header("Seaborn Histogram"),
                 ui.output_plot("seaborn_hist")
             )
         ),
-        
+
         ui.card(
             ui.card_header("Average Measurements by Species"),
             ui.output_data_frame("iris_summary_table"),
             style="max-height: 200px; font-size: 0.85rem; padding: 10px; margin: auto;"
         ),
 
-
+        ui.card(
+            ui.card_header("Correlation Heatmap"),
+            ui.output_plot("correlation_heatmap")
+        ),
 
         ui.card(
-            ui.card_header("Plotly Scatterplot: Sepal Length vs Sepal Width"),
+            ui.card_header("Plotly Scatterplot"),
             output_widget("plotly_scatterplot"),
             full_screen=True
         ),
@@ -86,11 +97,6 @@ def server(input, output, session):
         df = iris.dropna(subset=[input.selected_attribute()])
         df = df[df["species"].str.capitalize().isin(input.selected_species_list())]
         return df
-
-    @output
-    @render.data_frame
-    def iris_data_table():
-        return render.DataTable(filtered_data(), filters=True)
 
     @output
     @render.data_frame
@@ -123,13 +129,13 @@ def server(input, output, session):
             x=input.selected_attribute(),
             color="species",
             barmode="overlay",
-            nbins=input.plotly_bin_count(),
+            nbins=input.seaborn_bin_count(),
             hover_data=["petal_length", "petal_width", "sepal_length", "sepal_width"],
             title=f"Histogram of {input.selected_attribute().replace('_', ' ').title()} by Species",
             color_discrete_map={
-                "setosa": "#E6E6FA",
-                "versicolor": "#77DD77",
-                "virginica": "#5D3FD3"
+                "setosa": "#B497BD",
+                "versicolor": "#5D3FD3",
+                "virginica": "#77DD77"
             }
         )
         fig.update_layout(margin=dict(t=40, r=10, l=10, b=40))
@@ -145,7 +151,12 @@ def server(input, output, session):
             hue="species",
             multiple="layer",
             bins=input.seaborn_bin_count(),
-            alpha=0.6
+            alpha=0.6,
+            palette={
+                "setosa": "#B497BD",
+                "versicolor": "#5D3FD3",
+                "virginica": "#77DD77"
+            }
         )
         plt.title(f"Seaborn Histogram of {input.selected_attribute().replace('_', ' ').title()} by Species")
         plt.xlabel(input.selected_attribute().replace('_', ' ').title())
@@ -153,24 +164,59 @@ def server(input, output, session):
         return plt.gcf()
 
     @output
+    @render.plot
+    def correlation_heatmap():
+        plt.figure(figsize=(6, 4))
+        corr = iris.drop(columns="species").corr()
+        sns.heatmap(corr, annot=True, cmap="Purples", fmt=".2f", linewidths=0.5)
+        plt.title("Correlation Heatmap of Iris Features")
+        return plt.gcf()
+
+    @output
     @render_widget
     def plotly_scatterplot():
+        df = filtered_data()
+        plot_type = input.plot_type()
+        x = input.x_axis()
+        y = input.y_axis()
 
-        fig = px.scatter(
-            filtered_data(),
-            x="sepal_length",
-            y="sepal_width",
-            color="species",
-            title="Sepal Length vs Sepal Width",
-            hover_data=["petal_length", "petal_width"],
-            color_discrete_map={
-                "setosa": "#1f77b4",
-                "versicolor": "#ff7f0e",
-                "virginica": "#2ca02c"
-            }
-        )
+        if plot_type == "Scatterplot":
+            fig = px.scatter(
+                df,
+                x=x,
+                y=y,
+                color="species",
+                title=f"{x.replace('_', ' ').title()} vs {y.replace('_', ' ').title()} (Scatterplot)",
+                hover_data=["petal_length", "petal_width", "sepal_length", "sepal_width"],
+                color_discrete_map={
+                    "setosa": "#B497BD",
+                    "versicolor": "#5D3FD3",
+                    "virginica": "#77DD77"
+                }
+            )
+        else:
+            fig = px.line(
+                df.sort_values(by=x),
+                x=x,
+                y=y,
+                color="species",
+                title=f"{x.replace('_', ' ').title()} vs {y.replace('_', ' ').title()} (Line Graph)",
+                markers=True,
+                hover_data=["petal_length", "petal_width", "sepal_length", "sepal_width"],
+                color_discrete_map={
+                    "setosa": "#B497BD",
+                    "versicolor": "#5D3FD3",
+                    "virginica": "#77DD77"
+                }
+            )
+
         fig.update_layout(margin=dict(t=40, r=10, l=10, b=40))
         return fig
+
+# --------------------------------------------
+# App Launch
+# --------------------------------------------
+app = App(app_ui, server)
 
 # --------------------------------------------
 # App Launch
